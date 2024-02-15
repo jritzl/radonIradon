@@ -1,0 +1,553 @@
+%EE415 Term Project Demo Code by jritzl
+clear all
+
+I. Projection of the Square
+load("square.mat")
+
+%% Getting relevant parameters from image.
+% Using size function to arrange beams.
+%step1 and 3
+
+num_samples=100;
+step_theta=1;
+zero_vector = zeros(1, 50); 
+
+image = square;
+
+[imgHeight, imgWidth] = size(image);
+
+sample_number = linspace(1 , 100, 100);
+maxDistance = sqrt(imgHeight^2 + imgWidth^2) / 2;
+t_values = linspace(-maxDistance, maxDistance, num_samples);
+
+
+output=radontransform(image,step_theta,num_samples);
+% output=output+randn(size(output))*sqrt((max(output(:))));
+
+% Create a tiled layout for a 3x2 grid
+t = tiledlayout(3, 2);
+
+% First plot
+nexttile
+plot(t_values, output(:,1)) % Replace with your data
+title('Theta = 0 degrees')
+xlabel('t')
+ylabel('Projection Data')
+% Second plot
+nexttile
+plot(t_values, output(:,46)) % Replace with your data
+title('Theta = 45 degrees')
+xlabel('t')
+ylabel('Projection Data')
+% Third plot
+nexttile
+plot(t_values, output(:,61)) % Replace with your data
+title('Theta = 60 degrees')
+xlabel('t')
+ylabel('Projection Data')
+% Fourth plot
+nexttile
+plot(t_values, output(:,91)) % Replace with your data
+title('Theta = 90 degrees')
+xlabel('t')
+ylabel('Projection Data')
+% Fifth plot
+nexttile
+plot(t_values, output(:,136)) % Replace with your data
+title('Theta = 135 degrees')
+xlabel('t')
+ylabel('Projection Data')
+% Sixth plot
+nexttile
+plot(t_values, output(:,180)) % Replace with your data
+title('Theta = 179 degrees')
+xlabel('t')
+ylabel('Projection Data')
+% Add a general title and labels (optional)
+title(t, 'Projection Data for Various Theta Values for square')
+
+
+
+
+II. Projection of the Lena
+
+
+
+%% Getting relevant parameters from image.
+% Using size function to arrange beams.
+%step1 and 3
+
+num_samples=256;
+step_theta=1;
+zero_vector = zeros(1, 50); 
+
+image = a;
+
+[imgHeight, imgWidth] = size(image);
+
+sample_number = linspace(1 , 256, 256);
+maxDistance = sqrt(imgHeight^2 + imgWidth^2) / 2;
+t_values = linspace(-maxDistance, maxDistance, num_samples);
+
+
+output1=radontransform("C:\Users\Yunus\Desktop\415\Edward_Elric.png",step_theta,num_samples);
+% Create a tiled layout for a 3x2 grid
+t = tiledlayout(3, 2);
+% output1=output1+randn(size(output1))*sqrt((max(output1(:))))*5;
+
+
+% First plot
+nexttile
+plot(t_values, output1(:,1)) % Replace with your data
+title('Theta = 0 degrees')
+xlabel('t')
+ylabel('Projection Data')
+% Second plot
+nexttile
+plot(t_values, output1(:,46)) % Replace with your data
+title('Theta = 45 degrees')
+xlabel('t')
+ylabel('Projection Data')
+% Third plot
+nexttile
+plot(t_values, output1(:,61)) % Replace with your data
+title('Theta = 60 degrees')
+xlabel('t')
+ylabel('Projection Data')
+% Fourth plot
+nexttile
+plot(t_values, output1(:,91)) % Replace with your data
+title('Theta = 90 degrees')
+xlabel('t')
+ylabel('Projection Data')
+% Fifth plot
+nexttile
+plot(t_values, output1(:,136)) % Replace with your data
+title('Theta = 135 degrees')
+xlabel('t')
+ylabel('Projection Data')
+% Sixth plot
+nexttile
+plot(t_values, output1(:,180)) % Replace with your data
+title('Theta = 179 degrees')
+xlabel('t')
+ylabel('Projection Data')
+% Add a general title and labels (optional)
+title(t, 'Projection Data for Various Theta Values for Lena')
+
+
+
+
+III. BackProjection of the Square
+image = c;
+output=radontransform(image,1,200);
+[imgWidth, imgHeight] = size(image);
+maxDistance = sqrt(imgHeight^2 + imgWidth^2) / 2;
+window_size=510;
+int1=Iradonalgorithm(imgWidth,imgHeight,output,'none',window_size);
+int2=Iradonalgorithm(imgWidth,imgHeight,output,'ramlak',window_size);
+int3=Iradonalgorithm(imgWidth,imgHeight,output,'ramlak-hann',window_size);
+int4=Iradonalgorithm(imgWidth,imgHeight,output,'ramlak-blackman',window_size);
+int5=Iradonalgorithm(imgWidth,imgHeight,output,'ramlak-gausswin',window_size);
+
+
+err1=sum((image-int1).^2,"all")^(1/2)/50/50
+err2=sum((image-int2).^2,"all")^(1/2)/50/50
+err3=sum((image-int3).^2,"all")^(1/2)/50/50
+err4=sum((image-int4).^2,"all")^(1/2)/50/50
+err5=sum((image-int5).^2,"all")^(1/2)/50/50
+
+
+t = tiledlayout(2, 3);
+% First plot
+nexttile
+imshow(abs(image), [])
+title('original')
+
+% Second plot
+nexttile
+imshow(abs(int1), [])
+title(['none'])
+
+% Third plot
+nexttile
+imshow(abs(int2), [])
+title(['ramlak'])
+% Fourth plot
+nexttile
+imshow(abs(int3), [])
+title(['ramlak-hann'])
+
+
+% Fifth plot
+nexttile
+imshow(abs(int4), [])
+title(['ramlak-blackman'])
+
+% Sixth plot
+nexttile
+imshow(abs(int5), [])
+title(['ramlak-gauss'])
+
+% Add a general title and labels (optional)
+% Add a general title and labels (optional)
+title(t, 'BackProjection of square (100x51)')
+
+
+IV. BackProjection of the Lena
+output1=radontransform("C:\Users\Yunus\Desktop\415\Edward_Elric.png",1,500);
+window_size=500;
+int1=Iradonalgorithm(imgWidth,imgHeight,output1,'none',window_size);
+int2=Iradonalgorithm(imgWidth,imgHeight,output1,'ramlak',window_size);
+int3=Iradonalgorithm(imgWidth,imgHeight,output1,'ramlak-hann',window_size);
+int4=Iradonalgorithm(imgWidth,imgHeight,output1,'ramlak-blackman',window_size);
+int5=Iradonalgorithm(imgWidth,imgHeight,output1,'ramlak-gausswin',window_size);
+
+
+
+t = tiledlayout(2, 3);
+% First plot
+nexttile
+imshow(abs(image), [])
+title('original')
+
+% Second plot
+nexttile
+imshow(abs(int1), [])
+title(['none'])
+
+% Third plot
+nexttile
+imshow(abs(int2), [])
+title(['ramlak'])
+% Fourth plot
+nexttile
+imshow(abs(int3), [])
+title(['ramlak-hann'])
+
+
+% Fifth plot
+nexttile
+imshow(abs(int4), [])
+title(['ramlak-blackman'])
+
+% Sixth plot
+nexttile
+imshow(abs(int5), [])
+title(['ramlak-gauss'])
+
+% Add a general title and labels (optional)
+title(t, 'BackProjection of lena')
+
+
+function Image = Iradonalgorithm(Row, Column, projection_data, filter_type, window_size)
+
+    switch lower(filter_type)
+         case 'none'
+            projectiondata =projection_data; % Triangular filter
+        otherwise
+
+            num_beams = size(projection_data, 1); % Number of beams
+            num_angles = size(projection_data, 2); % Number of angles
+        
+            % Validate and adjust the window size if necessary
+            window_size = min(window_size, num_beams);
+        
+            % Initialize the filtered projection data matrix
+            filtered_projection = zeros(size(projection_data));
+        
+            % Step 1: Design the filter
+            n = linspace(-window_size/2, window_size/2, window_size);
+        
+            switch lower(filter_type)
+                case 'triangle'
+                    filter = triang(window_size).'; % Triangular filter
+                case 'ramlak'
+                    filter = triang(window_size).';
+                case 'ramlak-hamming'
+                    % Define basic Ram-Lak filter
+                    filter = triang(window_size).';
+                    % Apply Hamming window to Ram-Lak filter
+                    w_hamming = window(@hamming, window_size);
+                    filter = filter .* fftshift(w_hamming');
+                    filter = filter / max(filter); % Normalize the filter
+                case 'ramlak-barthann'
+                    % Define basic Ram-Lak filter
+                    filter = triang(window_size).';
+                    % Apply  window to Ram-Lak filter
+                    w_barthann = window(@barthannwin, window_size);
+                    filter = filter .* fftshift(w_barthann');
+                    filter = filter / max(filter); % Normalize the filter
+                case 'ramlak-rectwin'
+                    % Define basic Ram-Lak filter
+                    filter = triang(window_size).';
+                    % Apply  window to Ram-Lak filter
+                    w_barthann = window(@rectwin, window_size);
+                    filter = filter .* fftshift(w_barthann');
+                    filter = filter / max(filter); % Normalize the filter
+
+                case 'ramlak-blackman'
+                    % Define basic Ram-Lak filter
+                    filter = triang(window_size).';
+                    % Apply  window to Ram-Lak filter
+                    w_barthann = window(@blackman, window_size);
+                    filter = filter .* fftshift(w_barthann');
+                    filter = filter / max(filter); % Normalize the filter
+
+
+                case 'ramlak-hann'
+                    % Define basic Ram-Lak filter
+                    filter = triang(window_size).';
+                    % Apply  window to Ram-Lak filter
+                    w_barthann = window(@hann, window_size);
+                    filter = filter .* fftshift(w_barthann');
+                    filter = filter / max(filter); % Normalize the filter
+
+                case 'ramlak-nuttallwin'
+                    % Define basic Ram-Lak filter
+                    filter = triang(window_size).';
+                    % Apply  window to Ram-Lak filter
+                    w_barthann = window(@nuttallwin, window_size);
+                    filter = filter .* fftshift(w_barthann');
+                    filter = filter / max(filter); % Normalize the filter
+
+
+                case 'ramlak-gausswin'
+                    % Define basic Ram-Lak filter
+                    filter = triang(window_size).';
+                    % Apply  window to Ram-Lak filter
+                    w_barthann = window(@gausswin, window_size);
+                    filter = filter .* fftshift(w_barthann');
+                    filter = filter / max(filter); % Normalize the filter   
+                    
+                case 'none'
+                      filter = abs(n / (window_size / 2));
+                otherwise
+                    error('Unknown filter type');
+            end
+        
+            % Pad the filter to the size of the number of beams if necessary
+            if length(filter) < num_beams
+                padding = (num_beams - length(filter)) / 2;
+                filter = [zeros(1, floor(padding)), filter, zeros(1, ceil(padding))];
+            end
+        
+            % filter = fftshift(filter); % Center the filter
+        
+            % Apply the filter for each angle
+            for angle = 1:num_angles
+                % Step 2: Obtain the DFT of the projection data
+                DFT_data = fft(projection_data(:, angle));
+        
+                % Step 3: Apply the filter to the DFT
+                filtered_DFT = DFT_data .* filter';
+        
+                % Step 4: Take the inverse DFT
+                filtered_projection(:, angle) = real(ifft(filtered_DFT));
+            end
+                 projectiondata =filtered_projection;
+      end
+
+    [num_samples, angle] = size(projectiondata);
+    step_theta=180/angle;
+
+%step2
+    % Extracting image dimensions and computing the diagonal length.
+    imgHeight = Row;
+    imgWidth = Column;
+    Image = zeros(imgHeight, imgWidth);
+
+    maxDistance = sqrt(imgHeight^2 + imgWidth^2) / 2;
+%step4
+    % Generating vectors for theta and ts values based on the image dimensions.
+    theta_values = (0:step_theta:180-step_theta); 
+    t_values = linspace(-maxDistance, maxDistance, num_samples);
+    gridX = linspace(-imgWidth / 2, imgWidth / 2, imgWidth+1);
+    gridY = linspace(-imgHeight / 2, imgHeight / 2, imgHeight+1);
+
+
+
+    % Iteratively calculating Radon transform for each angle and t.
+    for theta = 1:length(theta_values)
+        current_angle = theta_values(theta);
+        for t = 1:length(t_values)
+            current_ts = t_values(t)+0.001;   
+%step 5
+            % Calculating intersection points for each ray and angle.
+            y_intersects = (current_ts - gridX * cosd(current_angle)) / sind(current_angle);
+            x_intersects = (current_ts - gridY * sind(current_angle)) / cosd(current_angle);
+
+            % Combining and sorting the intersection points.
+            all_intersections =[gridX' y_intersects' ; x_intersects' gridY'];
+%step 7
+           % Sort the intersection points by rows
+            all_intersections = sortrows(all_intersections);
+            % Find the unique rows (duplicate removal)
+            unique_indices = [true; any(diff(all_intersections, 1, 1) ~= 0, 2)];
+            % Keep only the unique rows
+            all_intersections = all_intersections(unique_indices, :);
+%step 6
+            % Filtering intersections that fall outside the image.
+           invalid_indices = all_intersections(:,1) < -imgWidth / 2 | all_intersections(:,1) > imgWidth / 2 | all_intersections(:,2) < -imgHeight / 2 | all_intersections(:,2) > imgHeight / 2;
+           valid_intersections = all_intersections;
+           valid_intersections(invalid_indices, :) = [];
+
+%%I could not find a way that changing the order of step 7 and 6
+            
+            % Handling edge case with a single or zero intersection.
+            if size(valid_intersections, 1) == 1 || size(valid_intersections, 1) == 0
+               
+                continue
+            end
+%step 8
+            % Calculate the differences between consecutive points for x and y coordinates
+            dx = diff(valid_intersections(:,1));
+            dy = diff(valid_intersections(:,2));
+
+            % Calculate the distance (length) between consecutive points
+            path_lengths = sqrt(dx.^2 + dy.^2);
+
+            % Calculate the midpoints between consecutive points
+            mid_x_points = (valid_intersections(1:end-1, 1) + valid_intersections(2:end, 1)) / 2;
+            mid_y_points = (valid_intersections(1:end-1, 2) + valid_intersections(2:end, 2)) / 2;
+
+
+            % Identifying the pixels intersected by the ray
+
+            [Ygrid, Ymid] = meshgrid(gridY, mid_y_points);
+            row_data = sum(Ygrid >= Ymid, 2);
+
+            [Xgrid, Xmid] = meshgrid(gridX, mid_x_points);
+            column_data = sum(Xgrid < Xmid, 2);
+            
+            
+            for i = 1:length(column_data)
+                if row_data(i) > 0 && row_data(i) <= imgHeight && column_data(i) > 0 && column_data(i) <= imgWidth
+                     Image(row_data(i), column_data(i)) = Image(row_data(i), column_data(i)) + path_lengths(i) * projectiondata(t, theta);
+                 end
+            end
+                
+          end
+
+      end
+
+
+end
+function output= radontransform(image_input,step_theta,num_samples)
+
+ if isstruct(image_input)
+        fieldNames = fieldnames(image_input);
+        image = image_input.(fieldNames{1});
+    elseif ischar(image_input) || isstring(image_input)
+        [~, ~, ext] = fileparts(image_input);
+        if strcmp(ext, '.mat')
+            % Load the MAT file and extract the image data
+            loaded_data = load(image_input);
+            fieldNames = fieldnames(loaded_data);
+            fieldNames = fieldNames(~startsWith(fieldNames, '__')); % Ignore MATLAB's internal variables
+            image = loaded_data.(fieldNames{1}); % Use the first non-internal field
+        else
+            % Read the image file (jpg or png)
+            image = imread(image_input);
+        end
+    else
+        % If the input is already a matrix, use it directly
+        image = image_input;
+    end
+
+    % Convert to 2D grayscale if not already
+    if ndims(image) > 2
+        image = rgb2gray(image);
+    elseif ismatrix(image) == false
+        image = squeeze(image);
+    end
+
+%step2
+    % Extracting image dimensions and computing the diagonal length.
+    [imgHeight, imgWidth] = size(image);
+    maxDistance = sqrt(imgHeight^2 + imgWidth^2) / 2;
+%step4
+    % Generating vectors for theta and ts values based on the image dimensions.
+    theta_values = (0:step_theta:180-step_theta); 
+    t_values = linspace(-maxDistance, maxDistance, num_samples);
+    gridX = linspace(-imgWidth / 2, imgWidth / 2, imgWidth+1);
+    gridY = linspace(-imgHeight / 2, imgHeight / 2, imgHeight+1);
+
+    % Initializing the matrix to store Radon transform results.
+    output = zeros(length(t_values), length(theta_values));
+
+    % Iteratively calculating Radon transform for each angle and t.
+    for theta = 1:length(theta_values)
+        current_angle = theta_values(theta);
+        for t = 1:length(t_values)
+            current_ts = t_values(t)+0.001; ;   
+%step 5
+            % Calculating intersection points for each ray and angle.
+            y_intersects = (current_ts - gridX * cosd(current_angle)) / sind(current_angle);
+            x_intersects = (current_ts - gridY * sind(current_angle)) / cosd(current_angle);
+
+            % Combining and sorting the intersection points.
+            all_intersections =[gridX' y_intersects' ; x_intersects' gridY'];
+%step 7
+           % Sort the intersection points by rows
+            all_intersections = sortrows(all_intersections);
+            % Find the unique rows (duplicate removal)
+            unique_indices = [true; any(diff(all_intersections, 1, 1) ~= 0, 2)];
+            % Keep only the unique rows
+            all_intersections = all_intersections(unique_indices, :);
+%step 6
+            % Filtering intersections that fall outside the image.
+           invalid_indices = all_intersections(:,1) < -imgWidth / 2 | all_intersections(:,1) > imgWidth / 2 | all_intersections(:,2) < -imgHeight / 2 | all_intersections(:,2) > imgHeight / 2;
+           valid_intersections = all_intersections;
+           valid_intersections(invalid_indices, :) = [];
+
+%%I could not find a way that changing the order of step 7 and 6
+            
+            % Handling edge case with a single or zero intersection.
+            if size(valid_intersections, 1) == 1 || size(valid_intersections, 1) == 0
+                output(t, theta) = 0;
+                continue
+            end
+%step 8
+            % Calculate the differences between consecutive points for x and y coordinates
+            dx = diff(valid_intersections(:,1));
+            dy = diff(valid_intersections(:,2));
+
+            % Calculate the distance (length) between consecutive points
+            path_lengths = sqrt(dx.^2 + dy.^2);
+
+            % Calculate the midpoints between consecutive points
+              mid_x_points = (valid_intersections(1:end-1, 1) + valid_intersections(2:end, 1)) / 2;
+              mid_y_points = (valid_intersections(1:end-1, 2) + valid_intersections(2:end, 2)) / 2;
+
+
+            % Identifying the pixels intersected by the ray
+
+            [Ygrid, Ymid] = meshgrid(gridY, mid_y_points);
+            row_data = sum(Ygrid >= Ymid, 2);
+
+            [Xgrid, Xmid] = meshgrid(gridX, mid_x_points);
+            column_data = sum(Xgrid < Xmid, 2);
+   
+            % Gathering pixel values from the image.
+            pixel_values = zeros(length(column_data), 1);
+            for pixel_index = 1:length(column_data)
+                if row_data(pixel_index) > 0 && row_data(pixel_index) <= imgHeight && column_data(pixel_index) > 0 && column_data(pixel_index) <= imgWidth
+                    pixel_values(pixel_index) = image(row_data(pixel_index), column_data(pixel_index));
+             
+                end
+                
+            end
+
+            % Calculating the projection value as a weighted sum.
+            radon_val = sum(path_lengths .* pixel_values, 1);
+            output(t, theta) = radon_val;
+        end
+
+    end
+
+
+end
+
+
+
